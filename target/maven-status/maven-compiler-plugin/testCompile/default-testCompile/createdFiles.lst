@@ -1,0 +1,11 @@
+com\address\api\dto\FooRequestDTO.class
+com\address\api\repository\AddressRepositoryTest.class
+com\address\api\mapper\AddressMapperTest.class
+com\address\api\dto\FooResponseDTO.class
+com\address\api\service\AddressServiceTest.class
+com\address\api\util\ObjectMapperUtilTest.class
+com\address\api\client\FooClient.class
+com\address\api\controller\FooController.class
+com\address\api\util\MessagesUtilTest.class
+com\address\api\controller\AddressControllerTest.class
+com\address\api\util\StringUtilsTest.class

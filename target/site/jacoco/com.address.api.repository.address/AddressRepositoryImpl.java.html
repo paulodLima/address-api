@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AddressRepositoryImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">address</a> &gt; <a href="index.source.html" class="el_package">com.address.api.repository.address</a> &gt; <span class="el_source">AddressRepositoryImpl.java</span></div><h1>AddressRepositoryImpl.java</h1><pre class="source lang-java linenums">package com.address.api.repository.address;
+
+import com.address.api.model.AddressEntity;
+import com.address.api.model.filter.AddressFilter;
+import org.apache.commons.lang3.StringUtils;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static com.address.api.util.RepositoryUtils.*;
+
+<span class="fc" id="L19">public class AddressRepositoryImpl implements AddressQuery {</span>
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Override
+    public List&lt;AddressEntity&gt; findAllByFilter(AddressFilter addressFilter, Pageable pageable) {
+<span class="fc" id="L26">        CriteriaBuilder builder = entityManager.getCriteriaBuilder();</span>
+<span class="fc" id="L27">        CriteriaQuery&lt;AddressEntity&gt; criteriaQuery = builder.createQuery(AddressEntity.class);</span>
+<span class="fc" id="L28">        Root&lt;AddressEntity&gt; rootAddress = criteriaQuery.from(AddressEntity.class);</span>
+
+<span class="fc" id="L30">        Predicate[] predicates = createAddressPredicates(builder,addressFilter,rootAddress);</span>
+
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        if(predicatesExists(predicates)){</span>
+<span class="fc" id="L33">            criteriaQuery.where(predicates);</span>
+        }
+
+<span class="fc" id="L36">        addOrdination(pageable, builder, criteriaQuery, rootAddress);</span>
+<span class="fc" id="L37">        TypedQuery&lt;AddressEntity&gt; query = entityManager.createQuery(criteriaQuery);</span>
+<span class="fc" id="L38">        addPagination(query, pageable);</span>
+
+<span class="fc" id="L40">        List&lt;AddressEntity&gt; resultList = query.getResultList();</span>
+
+<span class="fc" id="L42">        return new PageImpl&lt;&gt;(resultList).getContent();</span>
+    }
+
+    private Predicate[] createAddressPredicates(CriteriaBuilder builder, AddressFilter addressFilter, Root&lt;AddressEntity&gt; rootAddress) {
+<span class="fc" id="L46">        List&lt;Predicate&gt; predicates = new ArrayList&lt;&gt;();</span>
+
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">        if (Objects.isNull(addressFilter)){</span>
+<span class="nc" id="L49">            return null;</span>
+        }
+
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (Objects.nonNull(addressFilter.getId())){</span>
+<span class="nc" id="L53">            predicates.add(builder.notEqual(rootAddress.get(&quot;id&quot;), addressFilter.getId()));</span>
+        }
+
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">        if (StringUtils.isNotBlank(addressFilter.getCity())) {</span>
+<span class="nc" id="L57">            predicates.add(builder.like(builder.lower(rootAddress.get(&quot;city&quot;)), addressFilter.getCity().toLowerCase() + &quot;%&quot;));</span>
+        }
+
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (StringUtils.isNotBlank(addressFilter.getNeighborhood())) {</span>
+<span class="nc" id="L61">            predicates.add(builder.like(builder.lower(rootAddress.get(&quot;neighborhood&quot;)), addressFilter.getNeighborhood().toLowerCase() + &quot;%&quot;));</span>
+        }
+
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (StringUtils.isNotBlank(addressFilter.getState())) {</span>
+<span class="fc" id="L65">            predicates.add(builder.like(builder.lower(rootAddress.get(&quot;state&quot;)), addressFilter.getState().toLowerCase() + &quot;%&quot;));</span>
+        }
+
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (StringUtils.isNotBlank(addressFilter.getZipCode())) {</span>
+<span class="fc" id="L69">            predicates.add(builder.like(builder.lower(rootAddress.get(&quot;zipCode&quot;)), addressFilter.getZipCode().toLowerCase() + &quot;%&quot;));</span>
+        }
+
+<span class="fc" id="L72">        return predicates.toArray(new Predicate[predicates.size()]);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

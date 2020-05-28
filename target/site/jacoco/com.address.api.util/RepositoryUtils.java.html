@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RepositoryUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">address</a> &gt; <a href="index.source.html" class="el_package">com.address.api.util</a> &gt; <span class="el_source">RepositoryUtils.java</span></div><h1>RepositoryUtils.java</h1><pre class="source lang-java linenums">package com.address.api.util;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+public abstract class RepositoryUtils {
+
+    private RepositoryUtils() {
+    }
+
+    public static void addPagination(TypedQuery&lt;?&gt; query, Pageable pageable) {
+
+<span class="pc bpc" id="L18" title="1 of 2 branches missed.">        if (pageable.isPaged()) {</span>
+<span class="fc" id="L19">            int actualPage = pageable.getPageNumber();</span>
+<span class="fc" id="L20">            int totalRegistersPerPage = pageable.getPageSize();</span>
+<span class="fc" id="L21">            int firstRegisterOfPage = actualPage * totalRegistersPerPage;</span>
+
+<span class="fc" id="L23">            query.setFirstResult(firstRegisterOfPage);</span>
+<span class="fc" id="L24">            query.setMaxResults(totalRegistersPerPage);</span>
+        }
+
+<span class="fc" id="L27">    }</span>
+
+    public static void addOrdination(Pageable pageable, CriteriaBuilder builder, CriteriaQuery&lt;?&gt; criteria, Root&lt;?&gt; root) {
+
+<span class="fc" id="L31">        Sort sort = pageable.getSort();</span>
+
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        if (sort.isSorted()) {</span>
+<span class="nc" id="L34">            Sort.Order order = sort.iterator().next();</span>
+<span class="nc" id="L35">            String field = order.getProperty();</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">            criteria.orderBy(order.isAscending() ? builder.asc(root.get(field)) : builder.desc(root.get(field)));</span>
+        }
+
+<span class="fc" id="L39">    }</span>
+
+    public static boolean predicatesExists(Predicate[] predicates) {
+
+<span class="pc bpc" id="L43" title="1 of 4 branches missed.">        return predicates != null &amp;&amp; predicates.length &gt; 0;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
